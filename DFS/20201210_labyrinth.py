@@ -68,9 +68,6 @@ class Labyrinth:
                     pass
                 pass
             pass
-        
-        
-        
         pass
 
     def __str__(self):
@@ -93,13 +90,9 @@ class Labyrinth:
        +-+-+-+-+-+-+-+-+-+-+-+-+-+
        |x| |x|x| |x| | | | | | | |  ...
        +-+-+-+-+-+-+-+-+-+-+-+-+-+
-
-
     '''
-
-    
-
     def get_neighbours(self, location):
+
 
         def is_location_blocked(location):
             return self.__grid[location.row][location.column] == Cell.OBSTACLE
@@ -118,6 +111,16 @@ class Labyrinth:
         return [x for x in [left, right, top, bottom] if is_location_valid(x, self.__rows, self.__cols) and not is_location_blocked(x)]
         pass
 
+    def set_path_marker(self, path):
+        for location in path:
+            self.__grid[location.row][location.column] = Cell.PATH
+
+        self.__grid[self.__start.row][self.__start.column] = Cell.START
+        self.__grid[self.__goal.row][self.__goal.column] = Cell.GOAL
+
+    def is_goal(self, location):
+        return location == self.__goal
+
 
 '''
 This is the class for the nodes in a graph (stack)
@@ -134,6 +137,12 @@ class Node:
         return '{' + 'state=' + str(self.__state) + ', parent=' + str(self.__parent) + '}'
         pass
 
+    def get_state(self):
+        return self.__state
+
+    def get_parent(self):
+        return self.__parent
+
 class Stack:
     def __init__(self):
         self.__container = [] # list of nodes
@@ -145,9 +154,51 @@ class Stack:
         return self.__container.pop()
         pass
 
+    def empty(self):
+        return not self.__container
+
     def push(self, node): # add a node to the stack
         self.__container.append(node)
         pass
+
+
+
+def depth_first_search(start, grid):
+
+    print("DFS \n")
+
+    frontiers = Stack()
+    frontiers.push(Node(start, None))
+
+    visited_nodes = {start}
+
+    while not frontiers.empty():
+        current_node = frontiers.pop()
+        state = current_node.get_state()
+
+        # termination condition
+        if grid.is_goal(state):
+            return current_node
+
+        for neighbour in grid.get_neighbours(state):
+            if neighbour in visited_nodes:
+                continue
+
+            visited_nodes.add(neighbour)
+            frontiers.push(Node(neighbour, current_node))
+
+    return None
+
+def generate_path(node):
+    path = []
+    while node.get_parent() is not None:
+        node = node.get_parent()
+        location = node.get_state()
+        path.append(location)
+
+    path.reverse()
+    return path
+
 
 
 def main():
@@ -157,20 +208,17 @@ def main():
     goal = Location(0, 8)   
 
     labyrinth = Labyrinth(11, 11, 0.1, start, goal)
+    result = depth_first_search(start, labyrinth)
+
     print(labyrinth)
-
-
-    print(labyrinth.get_neighbours(start))
-    
     print('-'*50)
+    
+    if result is not None:
+        path = generate_path(result)
+        labyrinth.set_path_marker(path)
 
-    node = Node((1,2), None)
-    print(node)
-
-    stack = Stack()
-    stack.push(node)
-
-    print(stack)
+        print(labyrinth)
+    
 
 
 
