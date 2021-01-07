@@ -1,4 +1,4 @@
-
+from collections import deque
 
 class Node:
     def __init__(self, state, parent):
@@ -40,24 +40,40 @@ class Stack:
         pass
 
 
+class Queue:
+    def __init__(self):
+        self.__container = deque()
+
+    def pop(self):
+        return self.__container.popleft()
+
+    def push(self, node):
+        self.__container.append(node)
+
+    def empty(self):
+        return not self.__container
+
+    def __str__(self):
+        return '{' + 'container=' + str(self.__container) + '}'
 
 
 def depth_first_search(start, grid):
     
-    print('\n' + "="*23 + " DFS " + "="*23 + "\n")
+    # print('\n' + "="*23 + " DFS " + "="*23 + "\n")
 
     frontiers = Stack()
     frontiers.push(Node(start, None))
 
     visited_nodes = {start}
-
+    cntr = 0
     while not frontiers.empty():
+        cntr += 1
         current_node = frontiers.pop()
         state = current_node.get_state()
 
         # termination condition
         if grid.is_goal(state):
-            return current_node
+            return current_node, cntr
 
         for neighbour in grid.get_neighbours(state):
             if neighbour in visited_nodes:
@@ -66,7 +82,36 @@ def depth_first_search(start, grid):
             visited_nodes.add(neighbour)
             frontiers.push(Node(neighbour, current_node))
 
-    return None
+    return None, cntr
+
+def breadth_first_search(start, grid):
+    
+    # print('\n' + "="*23 + " BFS " + "="*23 + "\n")
+
+    frontiers = Queue()
+    frontiers.push(Node(start, None))
+
+    visited_nodes = {start}
+    cntr = 0
+    while not frontiers.empty():
+        cntr += 1
+        current_node = frontiers.pop()
+        state = current_node.get_state()
+
+        # termination condition
+        if grid.is_goal(state):
+            return current_node, cntr
+
+        for neighbour in grid.get_neighbours(state):
+            if neighbour in visited_nodes:
+                continue
+
+            visited_nodes.add(neighbour)
+            frontiers.push(Node(neighbour, current_node))
+
+    return None, cntr
+
+
 
 def generate_path(node):
     path = []

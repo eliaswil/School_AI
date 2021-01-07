@@ -3,8 +3,8 @@ import pygame
 import sys
 import collections
 
-import ue_20201217_dfs as dfs
-from ue_20201217_labyrinth import Cell, Labyrinth
+import ue_20210107_search as search
+from ue_20210107_labyrinth import Cell, Labyrinth
 
 
 '''
@@ -90,11 +90,24 @@ def main():
     labyrinth = Labyrinth(11, 11, 0.1, start, goal)
 
 
-    result = dfs.depth_first_search(start, labyrinth)
+    # result = search.depth_first_search(start, labyrinth)
+    result = search.breadth_first_search(start, labyrinth)
 
+    # benchmark
+    counter = {0: [], 1:[]}
+    for i in range(1000):
+        result, cntr = search.depth_first_search(start, labyrinth)
+        counter[0].append(cntr)
+        result, cntr = search.breadth_first_search(start, labyrinth)
+        counter[1].append(cntr)
+    
+    print('-'*50)
+    print('DFS: ' + str(sum(counter[0]) / len(counter[0])))
+    print('BFS: ' + str(sum(counter[1]) / len(counter[1])))
+    
     
     if result is not None:
-        path = dfs.generate_path(result)
+        path = search.generate_path(result)
         labyrinth.set_path_marker(path)
 
         print('-'*20 + " Labyrinth " + '-'*20 + '\n')

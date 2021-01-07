@@ -2,7 +2,7 @@
 from enum import Enum
 import collections
 import random # for filling grid with obstacles
-import ue_20201217_dfs as dfs
+import ue_20210107_search as search
 
 # Cell
 # Kann nix, ausser S,G,X,*, '' als Inhalt darstellen
@@ -144,13 +144,13 @@ def main():
     goal = Location(0, 8)   
 
     labyrinth = Labyrinth(11, 11, 0.1, start, goal)
-    result = dfs.depth_first_search(start, labyrinth)
+    result = search.depth_first_search(start, labyrinth)
 
     print(labyrinth)
     print('-'*50)
     
     if result is not None:
-        path = dfs.generate_path(result)
+        path = search.generate_path(result)
         labyrinth.set_path_marker(path)
 
         print(labyrinth)
