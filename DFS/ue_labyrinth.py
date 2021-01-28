@@ -130,7 +130,15 @@ class Labyrinth:
     def is_goal(self, location):
         return location == self.__goal
 
+# capturing
+def manhatten_distance(goal):
 
+    def distance(location): 
+        dist_x = abs(location.column - goal.column)
+        dist_y = abs(location.row - goal.row)
+        return (dist_x + dist_y)
+
+    return distance # return function distance
 
 
 
@@ -146,6 +154,11 @@ def main():
     labyrinth = Labyrinth(11, 11, 0.1, start, goal)
     result = search.depth_first_search(start, labyrinth)
 
+    distance = manhatten_distance(goal)
+    result, counter = search.a_star(start, labyrinth, distance)
+
+
+
     print(labyrinth)
     print('-'*50)
     
@@ -154,6 +167,7 @@ def main():
         labyrinth.set_path_marker(path)
 
         print(labyrinth)
+        print('length: ' + str(len(path)))
     
 
 

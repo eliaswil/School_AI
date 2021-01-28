@@ -80,8 +80,7 @@ class PriorityQueue:
         return not self.__container
 
     def pop(self):
-        heapq.heappop(self.__container)
-        pass
+        return heapq.heappop(self.__container)
 
     def push(self, node): 
         heapq.heappush(self.__container, node)
@@ -144,6 +143,33 @@ def breadth_first_search(start, grid):
             frontiers.push(Node(neighbour, current_node))
 
     return None, cntr
+
+def a_star(start, grid, heuristic): # heuristic is distance methode
+    counter = 0
+    frontiers = PriorityQueue()
+    frontiers.push(Node(start, None, 0.0, heuristic)) # set first node (start node) to frontiers
+
+    # visited nodes
+    visited_nodes = {start: 0.0} # Dict[Node, cost]
+
+    while not frontiers.empty():
+        counter += 1
+        current_node = frontiers.pop()
+        state = current_node.get_state()
+
+        if grid.is_goal(state):
+            return current_node, counter
+
+        for neighbour in grid.get_neighbours(state):
+            new_cost = current_node.get_cost() + 1
+
+            if neighbour not in visited_nodes or visited_nodes[neighbour] > new_cost:
+                visited_nodes[neighbour] = new_cost
+                frontiers.push(Node(neighbour, current_node, new_cost, heuristic(neighbour)))
+
+    return None, counter
+
+
 
 
 
