@@ -27,6 +27,9 @@ class Node:
     def get_heuristic(self):
         return self.__heuristic
 
+    def __lt__(self, other_node):
+        return (self.__cost + self.__heuristic) < (other_node.get_cost() + other_node.get_heuristic())
+
 
 '''
 This is the class for the nodes in a graph (stack)
