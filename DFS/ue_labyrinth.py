@@ -2,7 +2,7 @@
 from enum import Enum
 import collections
 import random # for filling grid with obstacles
-import ue_20210107_search as search
+import ue_search as search
 
 # Cell
 # Kann nix, ausser S,G,X,*, '' als Inhalt darstellen

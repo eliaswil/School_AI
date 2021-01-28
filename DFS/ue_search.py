@@ -1,9 +1,14 @@
 from collections import deque
+import heapq
 
 class Node:
-    def __init__(self, state, parent):
+    def __init__(self, state, parent, cost=0.0, heuristic=0.0):
         self.__state = state
         self.__parent = parent
+
+        # both together are the so called total-cost-cuntion (Gesamtkostenfunktion)
+        self.__cost = cost# cost-function
+        self.__heuristic = heuristic # distance to goal
         pass
 
     def __str__(self):
@@ -15,6 +20,13 @@ class Node:
 
     def get_parent(self):
         return self.__parent
+
+    def get_cost(self):
+        return self.__cost
+
+    def get_heuristic(self):
+        return self.__heuristic
+
 
 '''
 This is the class for the nodes in a graph (stack)
@@ -55,6 +67,25 @@ class Queue:
 
     def __str__(self):
         return '{' + 'container=' + str(self.__container) + '}'
+
+
+class PriorityQueue:
+    def __init__(self):
+        self.__container = []
+    
+    def empty(self):
+        return not self.__container
+
+    def pop(self):
+        heapq.heappop(self.__container)
+        pass
+
+    def push(self, node): 
+        heapq.heappush(self.__container, node)
+        pass
+
+    def __repr__(self):
+        return repr(self.__container)
 
 
 def depth_first_search(start, grid):

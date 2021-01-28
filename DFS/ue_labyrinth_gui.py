@@ -3,8 +3,8 @@ import pygame
 import sys
 import collections
 
-import ue_20210107_search as search
-from ue_20210107_labyrinth import Cell, Labyrinth
+import ue_search as search
+from ue_labyrinth import Cell, Labyrinth
 
 
 '''
